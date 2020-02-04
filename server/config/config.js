@@ -20,11 +20,11 @@ process.env.NODE_ENV = process.env.NODE_ENV ||'dev';
 =====================
 */
 
-let urlBD;
+/*let urlBD;
 
-// if (process.env.NODE_ENV === 'dev') {
-//     urlBD = 'mongodb://localhost:27017/coffee';
-// }else{
+if (process.env.NODE_ENV === 'dev') {
+    urlBD = 'mongodb://localhost:27017/coffee';
+}else{
     urlBD = 'mongodb+srv://admin:<admin>@coffee-p2asi.mongodb.net/test?retryWrites=true&w=majority'
-//}
-process.env.URLDB = urlBD
+}
+process.env.URLDB = urlBD*/

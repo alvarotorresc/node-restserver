@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 
 app.use(require('./routes/user'));
 
-mongoose.connect('mongodb+srv://admin:SmZVAR7zKaYEhcxD@coffee-p2asi.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://admin:admin@coffee-p2asi.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err, res) => {

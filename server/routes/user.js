@@ -80,8 +80,12 @@ app.put('/user/:id', async (req, res) => {
 app.delete('/user/:id', async (req, res) => {
     let id = req.params.id;
 
-    User.findByIdAndRemove(id, async (err, deletedUser) => {
-        if (deletedUser) {
+    let stateChange = {
+        state: false
+    }
+
+    User.findByIdAndUpdate(id, stateChange, { new: true }, async (err, deletedUser) => {
+        if (!deletedUser) {
             return res.status(400).json({
                 ok: false,
                 error: {
@@ -91,7 +95,6 @@ app.delete('/user/:id', async (req, res) => {
         }
 
         try {
-
             res.json({
                 ok: true,
                 deleteUser: await deletedUser

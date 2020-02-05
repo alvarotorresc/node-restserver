@@ -37,25 +37,13 @@ app.get('/user', async (req, res) => {
 });
 
 app.post('/user', async (req, res) => {
-    let { name, mail, password, role } = req.body;
-
-    const user = new User({
-        name,
-        mail,
-        password: bcrypt.hashSync(password, 10),
-        role
-    });
-
     try {
-        res.json({
-            ok: true,
-            saveUser: await user.save()
-        })
+        let { name, mail, password, role } = req.body;
+        const user = new User({ name, mail, password: bcrypt.hashSync(password, 10), role });
+        const saveUser = await user.save()
+        res.json({ ok: true, saveUser })
     } catch (err) {
-        return res.status(400).json({
-            ok: false,
-            err
-        });
+        return res.json({ ok: false, err });
     }
 });
 

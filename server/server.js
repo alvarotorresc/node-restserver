@@ -11,9 +11,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use(require('./routes/user'));
+//global routes conf
+app.use(require('./routes/index'));
 
-mongoose.connect('mongodb+srv://admin:admin@coffee-p2asi.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect('mongodb://localhost:27017/coffee', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err, res) => {

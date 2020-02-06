@@ -2,11 +2,13 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const User = require('../models/user');
+const { verifyToken } = require('../middelwares/autentification');
+
 const app = express();
 
 
 
-app.get('/user', async (req, res) => {
+app.get('/user', verifyToken, async (req, res) => {
 
     let from = req.query.from || 0;
     from = Number(from);

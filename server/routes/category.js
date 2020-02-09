@@ -10,6 +10,8 @@ let Category = require('../models/category');
 app.get('/category', verifyToken, (req, res) => {
     //all categories
     Category.find({})
+    .populate('user')
+    .sort('description')
         .exec((err, categories) => {
             if (err) {
                 return res.status(500).json({

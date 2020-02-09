@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const User = require('../models/user');
-const { verifyToken } = require('../middelwares/autentification');
+const { verifyToken, verifyAdminRole } = require('../middelwares/autentification');
 
 const app = express();
 
@@ -38,7 +38,7 @@ app.get('/user', verifyToken, async (req, res) => {
         })
 });
 
-app.post('/user', async (req, res) => {
+app.post('/user', [verifyToken, verifyAdminRole], async (req, res) => {
     try {
         let { name, mail, password, role } = req.body;
         const user = new User({ name, mail, password: bcrypt.hashSync(password, 10), role });
@@ -49,7 +49,7 @@ app.post('/user', async (req, res) => {
     }
 });
 
-app.put('/user/:id', async (req, res) => {
+app.put('/user/:id', verifyToken, async (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'mail', 'password', 'img', 'role', 'state']);
 
@@ -67,7 +67,7 @@ app.put('/user/:id', async (req, res) => {
         }
     });
 });
-app.delete('/user/:id', async (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyAdminRole], async (req, res) => {
     let id = req.params.id;
 
     let stateChange = {

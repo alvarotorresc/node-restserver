@@ -4,6 +4,67 @@ const app = express();
 const Product = require('../models/product');
 
 
+app.get('/products', verifyToken, (req, res) => {
+
+    let from = req.query.from || 0;
+    from = Number(from);
+
+    Product.find({ available: true })
+        .skip(from)
+        .limit(5)
+        .populate('user', 'name mail')
+        .populate('category', 'description')
+        .exec((err, productos) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.json({
+                ok: true,
+                products
+            });
+
+
+        })
+
+});
+app.get('/products/:id', (req, res) => {
+    let id = req.params.id;
+
+    Producto.findById(id)
+        .populate('user', 'name mail')
+        .populate('category', 'name')
+        .exec((err, productoDB) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            if (!productoDB) {
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: 'ID not found'
+                    }
+                });
+            }
+
+            res.json({
+                ok: true,
+                product: productoDB
+            });
+
+        });
+
+});
+
 app.post('/products', verifyToken, (req, res) => {
     let { name, priceUni, description, available, category } = req.body;
 

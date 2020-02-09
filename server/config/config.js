@@ -1,7 +1,3 @@
-
-
-
-
 /*
 =====================
     PUERTO
@@ -27,6 +23,13 @@ process.env.CADUCITY_TOKEN = 60*60*24*30;
 =====================
 */
 process.env.SEED = process.env.SEED || "seed";
+
+/*
+=====================
+    Google client id
+=====================
+*/
+process.env.CLIENT_ID = process.env.CLIENT_ID || '47683548124-lk5q6seuj4risc5qeh1033rmhjfvn064.apps.googleusercontent.com';
 /*
 =====================
     BD

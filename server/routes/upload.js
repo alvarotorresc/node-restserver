@@ -1,7 +1,11 @@
 const express = require('express');
 const expressFileupload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const User = require('../models/user');
+const Product = require('../models/product');
+
 
 
 app.use(expressFileupload())
@@ -51,27 +55,41 @@ app.put('/upload/:type/:id', (req, res) => {
         });
 
 
-
-        userImg(id, res, newFileName);
+        if (type === "users") {
+            userImg(id, res, newFileName);
+        }else {
+            productImg(id, res, newFileName);
+        }
+        
     })
 
 });
 
 const userImg = (id, res, newFileName) => {
     User.findById(id, (err, userDB) => {
-        if (err) return res.status(500).json({
-            ok: false,
-            err
-        })
+        if (err) {
+            deleteFile(newFileName, 'users');
+            return res.status(500).json({
+                ok: false,
+                err
+            })
+        }
 
-        if (!userDB) return res.status(500).json({
-            ok: false,
-            err: { message: 'User not found' }
-        })
 
-        
+        if (!userDB) {
+            deleteFile(newFileName, 'users');
+            return res.status(500).json({
+                ok: false,
+                err: { message: 'User not found' }
+            })
+        }
+
+
+
+        deleteFile(userDB.img, 'users');
 
         userDB.img = newFileName;
+
         userDB.save((err, savedUser) => {
             res.json({
                 ok: true,
@@ -82,8 +100,47 @@ const userImg = (id, res, newFileName) => {
     })
 }
 
-const productImg = () => {
+const productImg = (id, res, newFileName) => {
+    Product.findById(id, (err, productDB) => {
+        if (err) {
+            deleteFile(newFileName, 'products');
+            return res.status(500).json({
+                ok: false,
+                err
+            })
+        }
 
+
+        if (!productDB) {
+            deleteFile(newFileName, 'products');
+            return res.status(500).json({
+                ok: false,
+                err: { message: 'Product not found' }
+            })
+        }
+
+
+
+        deleteFile(productDB.img, 'products');
+
+        productDB.img = newFileName;
+
+        productDB.save((err, savedProduct) => {
+            res.json({
+                ok: true,
+                product: savedProduct,
+                img: newFileName
+            })
+        })
+    })
+}
+
+const deleteFile = (imgName, type) => {
+    const pathUrl = path.resolve(__dirname, `../../uploads/${type}/${imgName}`);
+
+    if (fs.existsSync(pathUrl)) {
+        fs.unlinkSync(pathUrl);
+    }
 }
 
 module.exports = app;

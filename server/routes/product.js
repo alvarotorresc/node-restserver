@@ -13,8 +13,8 @@ app.get('/products', verifyToken, (req, res) => {
         .skip(from)
         .limit(5)
         .populate('user', 'name mail')
-        .populate('category', 'description')
-        .exec((err, productos) => {
+        .populate('category', 'name')
+        .exec((err, products) => {
 
             if (err) {
                 return res.status(500).json({
@@ -64,6 +64,29 @@ app.get('/products/:id', (req, res) => {
         });
 
 });
+
+app.get('/products/buscar/:termino',verifyToken, (req, res) => {
+
+    const termin = req.params.termino;
+
+    const regex = new RegExp(termin, 'i');
+
+    Product.find({name: regex})
+            .populate('category', 'name')
+            .exec((err, products)=> {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        err
+                    });
+                }
+                res.json({
+                    ok: true,
+                    products
+                })
+            })
+
+})
 
 app.post('/products', verifyToken, (req, res) => {
     let { name, priceUni, description, available, category } = req.body;
